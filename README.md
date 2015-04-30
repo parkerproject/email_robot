@@ -1,3 +1,3 @@
-Dealsbox-landing
+Email robot
 ==================
-The Landing page for Dealsbox mobile app
+A nodejs email robot
