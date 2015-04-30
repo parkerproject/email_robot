@@ -1,6 +1,6 @@
 require('dotenv').load();
-var collections = ['bloggers'];
-var db = require("mongojs").connect(process.env.DEALSBOX_MONGODB_URL, collections);
+var collections = ['people'];
+var db = require("mongojs").connect(process.env.MONGODB_URL, collections);
 var swig = require('swig');
 var rp = require('request-promise');
 var mandrill = require('node-mandrill')(process.env.MANDRILL);
@@ -96,7 +96,7 @@ module.exports = {
   robot: {
     handler: function(request, reply) {
 
-      db.bloggers.find(function(err, docs) {
+      db.people.findOne(function(err, docs) {
         var subject = 'You are invited to INDATALY';
         var email, name;
 
