@@ -1,6 +1,6 @@
 require('dotenv').load();
-var collections = ['people'];
-var db = require("mongojs").connect(process.env.MONGODB_URL, collections);
+var collections = ['bloggers'];
+var db = require("mongojs").connect(process.env.DEALSBOX_MONGODB_URL, collections);
 var swig = require('swig');
 var rp = require('request-promise');
 var mandrill = require('node-mandrill')(process.env.MANDRILL);
@@ -25,7 +25,7 @@ function sendEmails(email, subject, content) {
         email: email
       }],
       from_email: 'frank@indataly.com',
-      from_name: 'Frank at INDATALY',
+      from_name: 'Frank from INDATALY',
       subject: subject,
       html: content
     }
@@ -96,43 +96,35 @@ module.exports = {
   robot: {
     handler: function(request, reply) {
 
-      db.people.findOne(function(err, docs) {
+      db.bloggers.find(function(err, docs) {
         var subject = 'You are invited to INDATALY';
         var email, name;
 
-        //  for (var i = 0, len = docs.length; i < 2; i++) {
+        for (var i = 0, len = docs.length; i < len; i++) {
+
+          email = docs[i]['EMAIL ADD'];
+          name = docs[i]['FIRST NAME'];
 
 
-        //email = docs[i]['EMAIL ADD'];
-        //name = docs[i]['FIRST NAME'];
-
-        // //  (function(userEmail, userName, index) {
-        // (function(index) {
-        //
-        //   swig.renderFile(__base + 'server/views/guest_post.html', {
-        //       //  name: userName
-        //     },
-        //     function(err, content) {
-        //       if (err) {
-        //         throw err;
-        //       }
-        //
-        //       if (index == 1) {
-        //         console.log(docs[i]);
-        //         break;
-        //       }
-        //
-        //       //sendEmails(userEmail, subject, content);
-        //
-        //     });
-        //
-        //   //}(email, name, i));
-        // }(i));
+          (function(userEmail, userName) {
 
 
-        //  }
+            swig.renderFile(__base + 'server/views/guest_post.html', {
+                name: userName
+              },
+              function(err, content) {
+                if (err) {
+                  throw err;
+                }
 
-        reply(docs.list);
+                sendEmails(userEmail, subject, content);
+
+              });
+
+          }(email, name));
+        }
+
+        reply('email sending...');
 
       });
 
