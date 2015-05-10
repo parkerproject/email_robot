@@ -3,13 +3,20 @@ var collections = ['fb_people', 'people', 'fb_ids'];
 var db = require("mongojs").connect(process.env.MONGODB_URL, collections);
 var swig = require('swig');
 var _ = require('lodash');
-var twitter = require('twitter');
+var Twitter = require('twitter');
 
 
 var domain = 'indataly.com';
 var mailgun = require('mailgun-js')({
     apiKey: process.env.MAILGUN_KEY,
     domain: domain
+});
+
+var twitter_client = new Twitter({
+    consumer_key: process.env.TWITTER_CONSUMER_KEY,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+    access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
 
@@ -64,8 +71,8 @@ module.exports = {
                 var subject = '$5/Mo SEO Toolbox Early Access!';
                 var email, name;
                 var emails = docs[0].list;
-                var breakEmail = _.chunk(emails, 18); // 14400/800
-                var firstRecord = breakEmail[0]; // remember to adjust this to next group ( each contains 800 emails)
+                var breakEmail = _.chunk(emails, 48); // 14400/300
+                var firstRecord = breakEmail[0]; // remember to adjust this to next group ( each contains 300 emails)
 
                 var emailArr = firstRecord;
 
@@ -101,6 +108,19 @@ module.exports = {
         app: {
             name: 'guestEmail'
         }
+    },
+
+    tweet: {
+        handler: function(request, reply) {
+
+            reply('tweeting..');
+
+        },
+        app: {
+            name: 'tweetmessage'
+        }
     }
+
+
 
 };
