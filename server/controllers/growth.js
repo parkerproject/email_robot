@@ -6,12 +6,15 @@ var _ = require('lodash');
 var Twitter = require('twitter');
 
 
+// mailgun variables
 var domain = 'indataly.com';
 var mailgun = require('mailgun-js')({
     apiKey: process.env.MAILGUN_KEY,
     domain: domain
 });
 
+
+// twitter variables
 var twitter_client = new Twitter({
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
     consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
@@ -68,11 +71,11 @@ module.exports = {
         handler: function(request, reply) {
 
             db.people.find({}).limit(1, function(err, docs) {
-                var subject = '$5/Mo SEO Toolbox Early Access!';
+                var subject = 'Let me insult your website!';
                 var email, name;
                 var emails = docs[0].list;
-                var breakEmail = _.chunk(emails, 48); // 14400/300
-                var firstRecord = breakEmail[0]; // remember to adjust this to next group ( each contains 300 emails)
+                var breakEmail = _.chunk(emails, 18); // 14400/800
+                var firstRecord = breakEmail[0]; // remember to adjust this to next group ( each contains 800 emails)
 
                 var emailArr = firstRecord;
 
